@@ -1,29 +1,45 @@
-const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js');
-const client = new Client({
-	intents: [
-		GatewayIntentBits.Guilds, 
-		GatewayIntentBits.GuildMessages, 
-		GatewayIntentBits.GuildPresences, 
-		GatewayIntentBits.GuildMessageReactions, 
-		GatewayIntentBits.DirectMessages,
-		GatewayIntentBits.MessageContent
-	], 
-	partials: [Partials.Channel, Partials.Message, Partials.User, Partials.GuildMember, Partials.Reaction] 
+const {
+  Client,
+  GatewayIntentBits,
+  Partials,
+  Collection,
+} = require("discord.js");
+const express = require("express");
+const app = express();
+
+app.get("/", async (req, res) => {
+  res.send("Hello World!");
 });
 
-const config = require('./config.json');
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.MessageContent,
+  ],
+  partials: [
+    Partials.Channel,
+    Partials.Message,
+    Partials.User,
+    Partials.GuildMember,
+    Partials.Reaction,
+  ],
+});
 
-client.commands = new Collection()
-client.aliases = new Collection()
+const config = require("./config.json");
+
+client.commands = new Collection();
+client.aliases = new Collection();
 client.slashCommands = new Collection();
-client.prefix = config.prefix
+client.prefix = config.prefix;
 
 module.exports = client;
 
-
-['command', 'slashCommand', 'events'].forEach((handler) => {
-  require(`./handlers/${handler}`)(client)
+["command", "slashCommand", "events"].forEach((handler) => {
+  require(`./handlers/${handler}`)(client);
 });
 
-
-client.login(process.env.TOKEN)
+client.login(process.env.TOKEN);
